@@ -13,7 +13,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """Return the last five published questions."""
-        return Question.objects.order_by("-pub_date")[:5]
+        return Question.objects.prefetch_related("choice_set").order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
@@ -24,6 +24,12 @@ class DetailView(generic.DetailView):
 class ResultsView(generic.DetailView):
     model = Question
     template_name = "polls/results.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["choices"] = list(self.object.choice_set.all())
+        context["total_votes"] = sum(choice.votes for choice in context["choices"])
+        return context
 
 
 def vote(request, question_id):

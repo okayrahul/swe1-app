@@ -1,22 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>{{ question.question_text }}</title>
-</head>
-<body>
-    <form action="{% url 'polls:vote' question.id %}" method="post">
-    {% csrf_token %}
-    <fieldset>
-        <legend><h1>{{ question.question_text }}</h1></legend>
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        {% for choice in question.choice_set.all %}
-            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
-        {% endfor %}
-    </fieldset>
-    <input type="submit" value="Vote">
-    </form>
-    <p><a href="{% url 'polls:index' %}">Back to polls</a></p>
-</body>
-</html>
+{% extends 'polls/base.html' %}
+{% block title %}{{ question.question_text }} — Polls{% endblock %}
+{% block page_class %}focused-page{% endblock %}
+{% block content %}
+    <a class="back-link" href="{% url 'polls:index' %}"><span aria-hidden="true">←</span> Back to polls</a>
+    <section class="voting-panel">
+        <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> YOUR TAKE, YOUR CHOICE</p>
+        <h1>{{ question.question_text }}</h1>
+        <p class="panel-intro">Choose the answer that feels most like you.</p>
+        <form action="{% url 'polls:vote' question.id %}" method="post">
+            {% csrf_token %}
+            {% if error_message %}<p class="error-message" role="alert">{{ error_message }}</p>{% endif %}
+            {% with choices=question.choice_set.all %}
+                <fieldset class="choice-list">
+                    <legend class="sr-only">Choose one answer</legend>
+                    {% for choice in choices %}
+                        <label class="choice-option" for="choice{{ forloop.counter }}">
+                            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" required>
+                            <span class="choice-text">{{ choice.choice_text }}</span>
+                            <span class="choice-check" aria-hidden="true">✓</span>
+                        </label>
+                    {% empty %}
+                        <p class="empty-state">This poll doesn't have any options yet.</p>
+                    {% endfor %}
+                </fieldset>
+                {% if choices %}<button class="button button-purple full-width" type="submit">Submit your vote <span aria-hidden="true">→</span></button>{% endif %}
+            {% endwith %}
+        </form>
+        <p class="panel-footnote">Curious about the conversation? <a href="{% url 'polls:results' question.id %}">View results</a></p>
+    </section>
+{% endblock %}

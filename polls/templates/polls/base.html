@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#6544c8">
+    <title>{% block title %}Polls{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'polls/site.css' %}">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <a class="brand" href="{% url 'polls:index' %}" aria-label="Polls home">
+            <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+            Polls<span class="brand-dot">.</span>
+        </a>
+        <a class="header-link" href="{% url 'polls:index' %}">Explore questions <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="main" class="page {% block page_class %}{% endblock %}">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <span>A little curiosity brings us together.</span>
+        <span class="footer-note">Made for your point of view <span aria-hidden="true">✳</span></span>
+    </footer>
+</body>
+</html>

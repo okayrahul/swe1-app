@@ -66,3 +66,19 @@ class PollsWorkflowTests(TestCase):
     def test_unknown_question_returns_404(self):
         response = self.client.get(reverse("polls:detail", args=[999999]))
         self.assertEqual(response.status_code, 404)
+
+    def test_results_without_votes_show_zero_percent(self):
+        response = self.client.get(reverse("polls:results", args=[self.question.pk]))
+        self.assertEqual(response.context["total_votes"], 0)
+        self.assertContains(response, "0%")
+        self.assertContains(response, "0 votes")
+
+    def test_results_display_vote_totals_and_rounded_percentages(self):
+        self.choice.votes = 2
+        self.choice.save()
+        Choice.objects.create(question=self.question, choice_text="Views", votes=1)
+        response = self.client.get(reverse("polls:results", args=[self.question.pk]))
+        self.assertEqual(response.context["total_votes"], 3)
+        self.assertContains(response, "67%")
+        self.assertContains(response, "33%")
+        self.assertContains(response, "3 votes")
