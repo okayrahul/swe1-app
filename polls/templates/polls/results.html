@@ -1,19 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Results: {{ question.question_text }}</title>
-</head>
-<body>
-    <h1>{{ question.question_text }}</h1>
-
-    <ul>
-    {% for choice in question.choice_set.all %}
-        <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
-    {% endfor %}
-    </ul>
-
-    <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
-    <p><a href="{% url 'polls:index' %}">Back to polls</a></p>
-</body>
-</html>
+{% extends 'polls/base.html' %}
+{% block title %}Results: {{ question.question_text }} — Polls{% endblock %}
+{% block page_class %}focused-page{% endblock %}
+{% block content %}
+    <a class="back-link" href="{% url 'polls:index' %}"><span aria-hidden="true">←</span> Back to polls</a>
+    <section class="voting-panel results-panel">
+        <div class="results-heading"><p class="eyebrow">THE RESULTS ARE IN</p><span class="vote-count">{{ total_votes }} vote{{ total_votes|pluralize }}</span></div>
+        <h1>{{ question.question_text }}</h1>
+        <p class="panel-intro">Here's how the perspectives add up.</p>
+        <ul class="results-list">
+            {% for choice in choices %}
+                <li class="result-row">
+                    <div class="result-label"><span>{{ choice.choice_text }}</span><strong>{% if total_votes %}{% widthratio choice.votes total_votes 100 %}{% else %}0{% endif %}%</strong></div>
+                    <div class="result-track" aria-hidden="true"><div class="result-fill" style="width: {% if total_votes %}{% widthratio choice.votes total_votes 100 %}{% else %}0{% endif %}%"></div></div>
+                    <span class="result-votes">{{ choice.votes }} vote{{ choice.votes|pluralize }}</span>
+                </li>
+            {% empty %}
+                <li class="empty-state">This poll doesn't have any options yet.</li>
+            {% endfor %}
+        </ul>
+        {% if not total_votes %}<p class="zero-votes">A fresh conversation. Be the first to weigh in.</p>{% endif %}
+        <a class="button button-purple full-width" href="{% url 'polls:detail' question.id %}">Vote again <span aria-hidden="true">→</span></a>
+        <p class="panel-footnote"><a href="{% url 'polls:index' %}">Explore another question</a></p>
+    </section>
+{% endblock %}

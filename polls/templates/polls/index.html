@@ -1,19 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Polls</title>
-</head>
-<body>
-    <h1>Polls</h1>
-    {% if latest_question_list %}
-        <ul>
-        {% for question in latest_question_list %}
-            <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No polls are available.</p>
-    {% endif %}
-</body>
-</html>
+{% extends 'polls/base.html' %}
+{% block title %}Polls — A place for your perspective{% endblock %}
+{% block content %}
+    <section class="hero">
+        <div class="hero-copy">
+            <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> A PLACE FOR YOUR PERSPECTIVE</p>
+            <h1>Small questions.<br><span>Interesting answers.</span></h1>
+            <p class="intro">A good question gets people talking. Pick a poll, share your take, and see where everyone lands.</p>
+            <a class="button button-dark" href="#questions">Find your next question <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+            <span class="art-orbit"></span>
+            <div class="ballot-card"><span class="ballot-caption">YOUR PERSPECTIVE MATTERS</span><span class="ballot-check">✓</span><span class="ballot-line"></span><span class="ballot-line short"></span></div>
+            <span class="art-spark">✳</span>
+        </div>
+    </section>
+    <section id="questions" class="questions-section" aria-labelledby="questions-title">
+        <div class="section-heading"><div><p class="eyebrow">THE CONVERSATION STARTS HERE</p><h2 id="questions-title">Latest questions</h2></div><span class="count-label">{{ latest_question_list|length }} poll{{ latest_question_list|length|pluralize }} to explore</span></div>
+        {% if latest_question_list %}
+            <div class="poll-grid">
+                {% for question in latest_question_list %}
+                    <a class="poll-card" href="{% url 'polls:detail' question.id %}">
+                        <div class="card-top"><span class="question-number">QUESTION {{ forloop.counter|stringformat:'02d' }}</span><span class="card-arrow" aria-hidden="true">↗</span></div>
+                        <h3>{{ question.question_text }}</h3>
+                        <div class="card-bottom"><span>{{ question.choice_set.count }} options</span><span>Cast your vote <span aria-hidden="true">→</span></span></div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state"><h3>The next conversation is on its way.</h3><p>No polls are available. Check back soon for a new question.</p></div>
+        {% endif %}
+    </section>
+{% endblock %}
