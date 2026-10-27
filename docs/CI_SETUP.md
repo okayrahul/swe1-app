@@ -31,9 +31,9 @@ Confirm these still match the existing AWS environment before the first build.
 ## 2. Coveralls
 
 Sign in at https://coveralls.io/ with GitHub and enable `okayrahul/swe1-app`.
-The Coveralls client recognizes Travis build metadata automatically. If the
-repository needs a token, add `COVERALLS_REPO_TOKEN` in Travis repository settings,
-with its value hidden from logs. Never commit the token.
+The Coveralls client recognizes Travis build metadata automatically. Enable the
+repository and add `COVERALLS_REPO_TOKEN` in Travis repository settings,
+with its value hidden from logs and available to all branches. Never commit the token.
 
 ## 3. Require passing status checks
 
@@ -69,4 +69,5 @@ Use the check name reported by the real first build rather than guessing it.
 
 The deployment uses the existing single-instance SQLite configuration. Its data
 is local to the instance and can be reset during redeployment or replacement.
+
 

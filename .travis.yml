@@ -18,7 +18,8 @@ script:
   - python -m coverage report
 
 after_success:
-  - coveralls
+  # travis-pro identifies travis-ci.com (rather than the retired .org service).
+  - coveralls --service-name travis-pro
 
 deploy:
   provider: elasticbeanstalk
