@@ -8,6 +8,11 @@ staticfiles/
 .idea/
 .vscode/
 *.log
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.coveralls.yml
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
