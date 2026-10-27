@@ -19,7 +19,7 @@ script:
 
 after_success:
   # travis-pro identifies travis-ci.com (rather than the retired .org service).
-  - coveralls --service-name travis-pro
+  - COVERALLS_SERVICE_NAME=travis-pro coveralls
 
 deploy:
   provider: elasticbeanstalk
