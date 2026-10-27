@@ -10,7 +10,7 @@ Sign in at https://app.travis-ci.com/ with GitHub and enable
 pull requests. Do not allow deployment secrets in fork pull request builds.
 
 In Travis repository settings, add the following environment variables with
-**Display value in build log** disabled:
+**Display value in build log** disabled and branch scope set to `main`:
 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
@@ -69,3 +69,4 @@ Use the check name reported by the real first build rather than guessing it.
 
 The deployment uses the existing single-instance SQLite configuration. Its data
 is local to the instance and can be reset during redeployment or replacement.
+
