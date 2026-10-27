@@ -1,0 +1,40 @@
+language: python
+os: linux
+dist: jammy
+python:
+  - "3.12"
+
+cache: pip
+
+install:
+  - python -m pip install -r requirements-dev.txt
+
+script:
+  - python -m black --check .
+  - python -m flake8 .
+  - python manage.py check
+  - python manage.py makemigrations --check --dry-run
+  - python -m coverage run manage.py test --noinput
+  - python -m coverage report
+
+after_success:
+  # travis-pro identifies travis-ci.com (rather than the retired .org service).
+  - COVERALLS_SERVICE_NAME=travis-pro coveralls
+
+deploy:
+  provider: elasticbeanstalk
+  edge: true
+  region: us-east-1
+  app: rahul-swe1-app
+  env: rahul-swe1-app-env
+  bucket: elasticbeanstalk-us-east-1-174135522077
+  bucket_path: travis/swe1-app
+  access_key_id: "$AWS_ACCESS_KEY_ID"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+  wait_until_deployed: true
+  on:
+    repo: okayrahul/swe1-app
+    branch: main
+
+notifications:
+  email: false
